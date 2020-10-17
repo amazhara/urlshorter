@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 	urlsCollection *mongo.Collection
 )
 
-func saveURLs(urls urlsShort) error {
+func saveShorts(urls Shorts) error {
 	var data []interface{}
 
 	// Explisitly convert urls to []interface
@@ -29,16 +30,16 @@ func saveURLs(urls urlsShort) error {
 	return nil
 }
 
-func findURLs() (urlsShort, error) {
-	var urls urlsShort
+func findShorts() (Shorts, error) {
+	var urls Shorts
 
-	curr, err := urlsCollection.Find(context.Background(), nil)
+	curr, err := urlsCollection.Find(context.Background(), bson.M{})
 
 	if err != nil {
 		return nil, err
 	}
 
-	if curr.Decode(&urls); err != nil {
+	if curr.All(context.Background(), &urls); err != nil {
 		return nil, err
 	}
 

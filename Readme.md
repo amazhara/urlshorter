@@ -1,0 +1,1 @@
+# Mongodb should be installed to run this project
